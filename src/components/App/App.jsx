@@ -14,10 +14,18 @@ import {
   ContactText,
 } from './App.styled';
 
+const getContactsState = () => {
+  const savedContacts = localStorage.getItem('contacts');
+  if (savedContacts !== null) {
+    const parsedContacts = JSON.parse(savedContacts);
+    return parsedContacts;
+  }
+};
+
 export const App = () => {
   const [contacts, setContacts] = useState(() => {
     return (
-      JSON.parse(window.localStorage.getItem('contacts')) ?? [
+      getContactsState() ?? [
         { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
         { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
         { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
@@ -26,14 +34,6 @@ export const App = () => {
     );
   });
   const [filter, setFilter] = useState('');
-
-  useEffect(() => {
-    const savedContacts = localStorage.getItem('contacts');
-    if (savedContacts !== null) {
-      const parsedContacts = JSON.parse(savedContacts);
-      setContacts([...parsedContacts]);
-    }
-  }, []);
 
   useEffect(() => {
     localStorage.setItem('contacts', JSON.stringify(contacts));
